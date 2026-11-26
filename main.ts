@@ -12,11 +12,11 @@ const bot = new SharpeBot(VERSIONS.V5);
 const rl = createInterface({ input: process.stdin, crlfDelay: Infinity });
 
 function handle(line: string): void {
-  const text = line.trim();
-  if (!text) return;
+  const trimmedLine = line.trim();
+  if (!trimmedLine) return;
   let msg: any;
   try {
-    msg = JSON.parse(text);
+    msg = JSON.parse(trimmedLine);
   } catch {
     return; // a malformed line never produces output
   }
@@ -25,9 +25,9 @@ function handle(line: string): void {
       bot.onHello(msg);
       break;
     case "batch": {
-      const orders = bot.onBatch(msg);
-      const reply = JSON.stringify({ type: "reply", seq: msg.seq, orders });
-      process.stdout.write(reply + "\n");
+      const batchOrders = bot.onBatch(msg);
+      const replyJson = JSON.stringify({ type: "reply", seq: msg.seq, orders: batchOrders });
+      process.stdout.write(replyJson + "\n");
       break;
     }
     case "done":
